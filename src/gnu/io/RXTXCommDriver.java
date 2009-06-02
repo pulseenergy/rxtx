@@ -406,12 +406,24 @@ public class RXTXCommDriver implements CommDriver
 
 		try
 		    {
+                     Properties p=new Properties();
 
-		     String ext_dir=System.getProperty("java.ext.dirs")+System.getProperty("file.separator");
-		     FileInputStream rxtx_prop=new FileInputStream(ext_dir+"gnu.io.rxtx.properties");
-		     Properties p=new Properties();
-		     p.load(rxtx_prop);
-		     System.setProperties(p);
+                     // ADM - patch for when java.ext.dirs returns a list
+                     //
+                     // Find the first gnu.io.rxtx.properties file in the list provided by java.ext.dirs
+                     // and load it into p.
+                          String ext_dir = System.getProperty("java.ext.dirs");
+                          String[] dirs = ext_dir.split(File.pathSeparator);
+                          for (int i = 0; i < dirs.length; i++) {
+                                   String dir = dirs[i];
+                                dir = dir.concat(System.getProperty("file.separator")+"gnu.io.rxtx.properties");
+                                if (new File(dir).exists()) {
+                                        FileInputStream rxtxProperties = new FileInputStream(dir);
+                                        p.load(rxtxProperties);
+                                        break;
+                                }
+                          }
+
 		     for (Iterator it = p.keySet().iterator(); it.hasNext();) {
 		          String key = (String) it.next();
 		          System.setProperty(key, p.getProperty(key));
