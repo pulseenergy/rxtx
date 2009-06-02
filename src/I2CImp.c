@@ -132,11 +132,13 @@ JNIEXPORT void JNICALL Java_gnu_io_I2CPort_Initialize(
 		fprintf(stderr,"RXTX WARNING:  cannot get system name\n");
 		return;
 	}
+#if 0
 	if(strcmp(name.release,UTS_RELEASE)!=0)
 	{
 		fprintf(stderr, "\n\n\nRXTX WARNING:  This library was compiled to run with OS release %s and you are currently running OS release %s.  In some cases this can be a problem.  Try recompiling RXTX if you notice strange behavior.  If you just compiled RXTX make sure /usr/include/linux is a symbolic link to the include files that came with the kernel source and not an older copy.\n\n\npress enter to continue\n",UTS_RELEASE,name.release);
 		getchar();
 	}
+#endif
 #endif /* __linux__ */
 #endif /* WIN32 */
 }
